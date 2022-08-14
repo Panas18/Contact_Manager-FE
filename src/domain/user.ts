@@ -5,3 +5,8 @@ export default interface User {
   password: string;
   photo?: string;
 }
+
+export interface LoginDetail {
+  email: string;
+  password: string;
+}
