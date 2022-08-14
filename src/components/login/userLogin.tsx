@@ -1,19 +1,32 @@
 import { Button, Form, Input } from "antd";
 import React, { useLayoutEffect } from "react";
 import "antd/dist/antd.css";
-import "./userRegister.css";
+import "./userLogin.css";
 import * as http from "../../http";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const UserRegisterForm: React.FC = () => {
+const UserLoginForm: React.FC = () => {
+  localStorage.removeItem("accessToken");
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   useLayoutEffect(() => {
     document.body.style.backgroundColor = "#F2F2EE";
   });
   const onFinish = async (values: any) => {
-    const res = await http.registerUser(values);
-    console.log(res);
-    form.resetFields();
+    try {
+      const res = await http.loginUser(values);
+      try {
+        const accessToken = res.data.data.accessToken;
+        localStorage.setItem("accessToken", accessToken);
+        console.log("login successful");
+        form.resetFields();
+        navigate({ pathname: "/" });
+      } catch (err) {
+        console.log("password or email doesn't match");
+      }
+    } catch (err) {
+      console.log("Error login in");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -21,8 +34,8 @@ const UserRegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="register--container">
-      <h1 className="register--title">Register on Contact</h1>
+    <div className="login--container">
+      <h1 className="login--title">Sign in to Contact</h1>
       <div>
         <Form
           name="basic"
@@ -32,25 +45,6 @@ const UserRegisterForm: React.FC = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          <Form.Item
-            label="First Name"
-            name="first_name"
-            rules={[
-              { required: true, message: "Please input your first name!" },
-            ]}
-          >
-            <Input placeholder="John" />
-          </Form.Item>
-
-          <Form.Item
-            label="Last Name"
-            name="last_name"
-            rules={[
-              { required: true, message: "Please input your last name!" },
-            ]}
-          >
-            <Input placeholder="Smith" />
-          </Form.Item>
           <Form.Item
             label="Email"
             name="email"
@@ -66,20 +60,20 @@ const UserRegisterForm: React.FC = () => {
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password placeholder="Enter secure password" />
+            <Input.Password placeholder="Enter your password" />
           </Form.Item>
 
           <Form.Item>
             <Button className="btn" type="primary" htmlType="submit">
-              Register
+              Login
             </Button>
           </Form.Item>
           <div>
             <hr />
           </div>
-          <div className="signin">
-            Already on Contact?
-            <Link to="/login"> Sign in</Link>
+          <div className="login">
+            Dont' have an account?
+            <Link to="/register"> Sign up</Link>
           </div>
         </Form>
       </div>
@@ -87,4 +81,4 @@ const UserRegisterForm: React.FC = () => {
   );
 };
 
-export default UserRegisterForm;
+export default UserLoginForm;
