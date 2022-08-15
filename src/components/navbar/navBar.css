@@ -1,0 +1,39 @@
+.navbar {
+  position: relative;
+  display: flex;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  max-width: 1200px;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.logo {
+  color: #1990fe;
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.nav-items {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.addContact--btn {
+  background-color: #1990fe;
+  color: white !important;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.addContact--btn:hover {
+  background-color: #125a9d;
+}

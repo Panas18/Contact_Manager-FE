@@ -12,3 +12,10 @@ export const loginUser = async (loginDetail: LoginDetail) => {
   const res = await axios.post("/login", loginDetail);
   return res;
 };
+
+export const getAllContact = async (config: any) => {
+  const response = await axios.get("/contact", config);
+  const { data } = await response.data;
+
+  return data;
+};
