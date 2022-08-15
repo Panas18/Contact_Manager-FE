@@ -18,7 +18,6 @@ const UserLoginForm: React.FC = () => {
       try {
         const accessToken = res.data.data.accessToken;
         localStorage.setItem("accessToken", accessToken);
-        console.log("login successful");
         form.resetFields();
         navigate({ pathname: "/" });
       } catch (err) {
