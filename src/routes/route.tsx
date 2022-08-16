@@ -3,7 +3,7 @@ import RegisterForm from "../components/register/userRegister";
 import UserLoginForm from "../components/login/userLogin";
 import HomePage from "../pages/home/homePage";
 import { NavBar } from "../components/navbar/navBar";
-import AddContactPage from "../pages/addContact/addContact";
+import ContactForm from "../components/contactForm/contactForm";
 
 function AppRoutes() {
   return (
@@ -13,7 +13,14 @@ function AppRoutes() {
       <Route path="/" element={<NavBar />}>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/contact" element={<HomePage />}></Route>
-        <Route path="/contact/add" element={<AddContactPage />}></Route>
+        <Route
+          path="/contact/add"
+          element={<ContactForm update={false} />}
+        ></Route>
+        <Route
+          path="/contact/edit/:id"
+          element={<ContactForm update={true} />}
+        ></Route>
       </Route>
     </Routes>
   );
