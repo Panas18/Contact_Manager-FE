@@ -3,7 +3,7 @@ import RegisterForm from "../components/register/userRegister";
 import UserLoginForm from "../components/login/userLogin";
 import HomePage from "../pages/home/homePage";
 import { NavBar } from "../components/navbar/navBar";
-import AddContactPage from "../pages/home/addContact/addContact";
+import AddContactPage from "../pages/addContact/addContact";
 
 function AppRoutes() {
   return (

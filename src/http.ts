@@ -19,3 +19,8 @@ export const getAllContact = async (config: any) => {
 
   return data;
 };
+
+export const addContact = async (contact: any, config: any) => {
+  const response = await axios.post("/contact/add", contact, config);
+  return response;
+};
