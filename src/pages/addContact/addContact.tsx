@@ -1,5 +1,5 @@
 import React from "react";
-import AddContactTable from "../../../components/addContact/addContact";
+import AddContactTable from "../../components/contactForm/contactForm";
 
 const AddContactPage: React.FC = () => {
   return <AddContactTable />;
