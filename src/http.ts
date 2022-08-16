@@ -20,7 +20,20 @@ export const getAllContact = async (config: any) => {
   return data;
 };
 
+export const getContactById = async (contact_id: number, config: any) => {
+  const response = await axios.get(`/contact/${contact_id}`, config);
+
+  return response;
+};
+
 export const addContact = async (contact: any, config: any) => {
+  console.log(contact);
   const response = await axios.post("/contact/add", contact, config);
+  return response;
+};
+
+export const updateContact = async (contact: any, id: string, config: any) => {
+  console.log(contact);
+  const response = await axios.put(`/contact/${id}`, contact, config);
   return response;
 };

@@ -11,6 +11,13 @@ import "./contactTable.css";
 
 const columns: ColumnsType<any> = [
   {
+    width: 100,
+    dataIndex: "photo",
+    render: (photo) => (
+      <img src={photo} alt={"profile pictre"} className="profile--photo" />
+    ),
+  },
+  {
     title: "First Name",
     dataIndex: "first_name",
     key: "first_name",
@@ -38,9 +45,12 @@ const columns: ColumnsType<any> = [
   {
     title: "Action",
     key: "action",
-    render: () => (
+    render: (text, record, index) => (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link to="#">View</Link>
+        <Link to={`/contact/edit/${record.key}`}>Edit</Link>
+        <Link to="#" style={{ color: "red" }}>
+          Delete
+        </Link>
       </div>
     ),
   },
@@ -54,6 +64,7 @@ const formatedData = (contact: Contact) => {
     email: contact.email,
     mobile: contact.mobile,
     company: contact.company,
+    photo: contact.photo,
   };
 
   return tableRow;
@@ -71,9 +82,9 @@ const ContactTable = () => {
       dispatch(addContact(data));
     })();
   }, [dispatch]);
-
   const contacts = useSelector((state: RootState) => state.addContact.data);
   const data = contacts.map(formatedData);
+  console.log(data);
   return (
     <div>
       <div className="contact--title">Contacts</div>
