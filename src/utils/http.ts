@@ -1,8 +1,7 @@
 import axios from "axios";
 import User from "../domain/user";
 import LoginDetail from "../domain/user";
-// axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.baseURL = "https://hidden-mesa-45277.herokuapp.com/";
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL as string;
 
 export const getConfig = () => {
   const accessToken = localStorage.getItem("accessToken");
@@ -11,6 +10,7 @@ export const getConfig = () => {
   };
   return config;
 };
+
 /**
  * Create new user
  * @param user
