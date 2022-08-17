@@ -5,6 +5,7 @@ import "./contactForm.css";
 import { useLayoutEffect, useEffect } from "react";
 import * as http from "../../utils/http";
 import { useNavigate, useParams } from "react-router-dom";
+import openNotification from "../../utils/notification";
 
 interface ContactFormInterface {
   update: boolean;
@@ -60,9 +61,10 @@ const ContactForm = (props: ContactFormInterface) => {
     try {
       if (!props.update) {
         const res = await http.addContact(formData);
-        console.log(res);
+        openNotification(res.data.message);
       } else {
         const res = await http.updateContact(formData, id as string);
+        openNotification(res.data.message);
         console.log(res);
       }
 

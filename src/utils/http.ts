@@ -3,7 +3,7 @@ import User from "../domain/user";
 import LoginDetail from "../domain/user";
 axios.defaults.baseURL = "http://localhost:5000";
 
-const getConfig = () => {
+export const getConfig = () => {
   const accessToken = localStorage.getItem("accessToken");
   const config = {
     headers: { Authorization: `Bearer ${accessToken}` },

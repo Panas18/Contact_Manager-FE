@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, notification } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Contact from "../../domain/contact";
@@ -9,6 +9,7 @@ import { addContact } from "../../store/slice/contactSlice";
 import { RootState } from "../../store/store";
 import sortContact from "../../utils/sortContact";
 import "./contactTable.css";
+import openNotification from "../../utils/notification";
 
 const { Column } = Table;
 
@@ -44,7 +45,7 @@ const ContactTable = () => {
     const res = await http.deleteContact(contact_id);
     const data = await http.getAllContact();
     dispatch(addContact(data));
-    console.log(res);
+    openNotification(res.data.message);
   };
 
   const handleFavourite = async (is_favourite: boolean, contact_id: string) => {

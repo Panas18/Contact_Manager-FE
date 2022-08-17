@@ -4,6 +4,7 @@ import "antd/dist/antd.css";
 import "./userLogin.css";
 import * as http from "../../utils/http";
 import { Link, useNavigate } from "react-router-dom";
+import openNotification from "../../utils/notification";
 
 const UserLoginForm: React.FC = () => {
   localStorage.removeItem("accessToken");
@@ -19,13 +20,14 @@ const UserLoginForm: React.FC = () => {
       try {
         const accessToken = res.data.data.accessToken;
         localStorage.setItem("accessToken", accessToken);
+        openNotification("Login successful");
         form.resetFields();
         navigate({ pathname: "/" });
       } catch (err) {
-        console.log("password or email doesn't match");
+        openNotification("Password or email doesn't match");
       }
     } catch (err) {
-      console.log("Error login in");
+      openNotification("Error login in");
     }
   };
 

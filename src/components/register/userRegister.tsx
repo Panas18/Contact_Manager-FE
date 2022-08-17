@@ -3,17 +3,24 @@ import React, { useLayoutEffect } from "react";
 import "antd/dist/antd.css";
 import "./userRegister.css";
 import * as http from "../../utils/http";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import openNotification from "../../utils/notification";
 
 const UserRegisterForm: React.FC = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   useLayoutEffect(() => {
     document.body.style.backgroundColor = "#F2F2EE";
   });
   const onFinish = async (values: any) => {
-    const res = await http.registerUser(values);
-    console.log(res);
-    form.resetFields();
+    try {
+      const res = await http.registerUser(values);
+      form.resetFields();
+      openNotification(res.data.messae);
+      navigate({ pathname: "/login" });
+    } catch (err) {
+      openNotification("Error during registration");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
