@@ -1,8 +1,9 @@
 import { Table } from "antd";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Contact from "../../domain/contact";
 import * as http from "../../http";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../store/slice/contactSlice";
 import { RootState } from "../../store/store";
@@ -19,6 +20,7 @@ const formatedData = (contact: Contact) => {
     mobile: contact.mobile,
     company: contact.company,
     photo: contact.photo,
+    is_favourite: contact.is_favourite,
   };
 
   return tableRow;
@@ -28,24 +30,27 @@ const ContactTable = () => {
   const dispatch = useDispatch();
   const contacts = useSelector((state: RootState) => state.addContact.data);
   let data = contacts.map(formatedData);
-  const [dataDeletion, setDataDeletion] = useState<boolean>(true);
 
   useEffect(() => {
-    if (dataDeletion) {
-      (async () => {
-        const data = await http.getAllContact();
-        dispatch(addContact(data));
-        setDataDeletion(false);
-      })();
-    }
-  }, [dispatch, dataDeletion]);
+    (async () => {
+      const data = await http.getAllContact();
+      dispatch(addContact(data));
+    })();
+  }, [dispatch]);
 
   const handleDeleteButton = async (contact_id: string) => {
-    setDataDeletion(true);
     const res = await http.deleteContact(contact_id);
-    data = data.filter((item) => {
-      return item.key !== +contact_id;
-    });
+    const data = await http.getAllContact();
+    dispatch(addContact(data));
+    console.log(res);
+  };
+
+  const handleFavourite = async (is_favourite: boolean, contact_id: string) => {
+    const formData = new FormData();
+    formData.append("is_favourite", `${!is_favourite}`);
+    const res = await http.updateContact(formData, contact_id);
+    const data = await http.getAllContact();
+    dispatch(addContact(data));
     console.log(res);
   };
 
@@ -64,7 +69,19 @@ const ContactTable = () => {
         <Column title="Last Name" dataIndex="last_name" key="last_name" />
         <Column title="Email" dataIndex="email" key="email" />
         <Column title="Mobile Number" dataIndex="mobile" key="mobile" />
-        <Column title="Company" dataIndex="company" key="company" />
+        <Column
+          title=""
+          dataIndex="key"
+          render={(key, contact: Contact) => (
+            <div onClick={() => handleFavourite(contact.is_favourite!, key)}>
+              {contact.is_favourite ? (
+                <StarFilled style={{ color: "#1990fe", fontSize: "20px" }} />
+              ) : (
+                <StarOutlined style={{ fontSize: "20px" }} />
+              )}
+            </div>
+          )}
+        />
         <Column
           title="Action"
           key="action"
@@ -72,7 +89,9 @@ const ContactTable = () => {
           render={(key) => (
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Link to={`/contact/edit/${key}`}>Edit</Link>
+              <Link to="#">View</Link>
               <Link
+                style={{ color: "red" }}
                 to={"/contact"}
                 onClick={() => {
                   handleDeleteButton(key);
