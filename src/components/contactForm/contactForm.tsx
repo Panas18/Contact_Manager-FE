@@ -67,7 +67,7 @@ const ContactForm = (props: ContactFormInterface) => {
         const res = await http.addContact(formData, config);
         console.log(res);
       } else {
-        const res = await http.updateContact(formData, id as string, config);
+        const res = await http.updateContact(formData, id as string);
         console.log(res);
       }
 

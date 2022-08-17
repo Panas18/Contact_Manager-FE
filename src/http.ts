@@ -73,7 +73,8 @@ export const addContact = async (contact: any, config: any) => {
  * @param config
  * @returns
  */
-export const updateContact = async (contact: any, id: string, config: any) => {
+export const updateContact = async (contact: any, id: string) => {
+  const config = getConfig();
   const response = await axios.put(`/contact/${id}`, contact, config);
   return response;
 };
