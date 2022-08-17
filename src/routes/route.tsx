@@ -3,9 +3,7 @@ import RegisterForm from "../components/register/userRegister";
 import UserLoginForm from "../components/login/userLogin";
 import HomePage from "../pages/home/homePage";
 import { NavBar } from "../components/navbar/navBar";
-import { useState } from "react";
 import ContactForm from "../components/contactForm/contactForm";
-import * as http from "../utils/http";
 import AdminRoute from "./adminRoutes";
 
 function AppRoutes() {

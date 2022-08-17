@@ -1,4 +1,4 @@
-import { Table, notification } from "antd";
+import { Table } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Contact from "../../domain/contact";
