@@ -1,6 +1,6 @@
 import axios from "axios";
-import User from "./domain/user";
-import LoginDetail from "./domain/user";
+import User from "../domain/user";
+import LoginDetail from "../domain/user";
 axios.defaults.baseURL = "http://localhost:5000";
 
 const getConfig = () => {
@@ -49,7 +49,8 @@ export const getAllContact = async () => {
  * @param config
  * @returns
  */
-export const getContactById = async (contact_id: number, config: any) => {
+export const getContactById = async (contact_id: number) => {
+  const config = getConfig();
   const response = await axios.get(`/contact/${contact_id}`, config);
 
   return response;
@@ -60,8 +61,8 @@ export const getContactById = async (contact_id: number, config: any) => {
  * @param config
  * @returns
  */
-export const addContact = async (contact: any, config: any) => {
-  console.log(contact);
+export const addContact = async (contact: any) => {
+  const config = getConfig();
   const response = await axios.post("/contact/add", contact, config);
   return response;
 };
