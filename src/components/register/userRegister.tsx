@@ -19,7 +19,7 @@ const UserRegisterForm: React.FC = () => {
       openNotification(res.data.messae);
       navigate({ pathname: "/login" });
     } catch (err) {
-      openNotification("Error during registration");
+      openNotification("Error during     res.json(result);registration");
     }
   };
 
