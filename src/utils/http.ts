@@ -85,3 +85,9 @@ export const deleteContact = async (contact_id: string) => {
   const response = await axios.delete(`/contact/${contact_id}`, config);
   return response;
 };
+
+export const authUser = async () => {
+  const config = getConfig();
+  const response = await axios.get("/authenticate", config);
+  return response;
+};

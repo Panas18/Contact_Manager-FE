@@ -1,9 +1,6 @@
 import { Outlet, Navigate } from "react-router-dom";
 
-type Props = {
-  loggedIn: string | null;
-};
-
-export default function AdminRoute(props: Props) {
-  return props.loggedIn ? <Outlet /> : <Navigate to="/" />;
+export default function AdminRoute() {
+  const accessToken = localStorage.getItem("accessToken");
+  return accessToken ? <Outlet /> : <Navigate to="/login" />;
 }
