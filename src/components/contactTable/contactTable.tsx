@@ -2,11 +2,12 @@ import { Table } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Contact from "../../domain/contact";
-import * as http from "../../http";
+import * as http from "../../utils/http";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../store/slice/contactSlice";
 import { RootState } from "../../store/store";
+import sortContact from "../../utils/sortContact";
 import "./contactTable.css";
 
 const { Column } = Table;
@@ -34,7 +35,8 @@ const ContactTable = () => {
   useEffect(() => {
     (async () => {
       const data = await http.getAllContact();
-      dispatch(addContact(data));
+      const sortedContact = sortContact(data);
+      dispatch(addContact(sortedContact));
     })();
   }, [dispatch]);
 
@@ -50,7 +52,9 @@ const ContactTable = () => {
     formData.append("is_favourite", `${!is_favourite}`);
     const res = await http.updateContact(formData, contact_id);
     const data = await http.getAllContact();
-    dispatch(addContact(data));
+
+    const sortedContact = sortContact(data);
+    dispatch(addContact(sortedContact));
     console.log(res);
   };
 
@@ -89,7 +93,6 @@ const ContactTable = () => {
           render={(key) => (
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Link to={`/contact/edit/${key}`}>Edit</Link>
-              <Link to="#">View</Link>
               <Link
                 style={{ color: "red" }}
                 to={"/contact"}

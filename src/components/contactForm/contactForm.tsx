@@ -3,7 +3,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import React from "react";
 import "./contactForm.css";
 import { useLayoutEffect, useEffect } from "react";
-import * as http from "../../http";
+import * as http from "../../utils/http";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface ContactFormInterface {
@@ -13,11 +13,6 @@ interface ContactFormInterface {
 const ContactForm = (props: ContactFormInterface) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-
-  const accessToken = localStorage.getItem("accessToken");
-  const config = {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  };
 
   const navigate = useNavigate();
   useLayoutEffect(() => {
@@ -30,7 +25,7 @@ const ContactForm = (props: ContactFormInterface) => {
   useEffect(() => {
     (async () => {
       if (props.update) {
-        const res: any = await http.getContactById(+id!, config);
+        const res: any = await http.getContactById(+id!);
         const contact = res.data.data;
 
         form.setFieldsValue({
@@ -64,7 +59,7 @@ const ContactForm = (props: ContactFormInterface) => {
 
     try {
       if (!props.update) {
-        const res = await http.addContact(formData, config);
+        const res = await http.addContact(formData);
         console.log(res);
       } else {
         const res = await http.updateContact(formData, id as string);

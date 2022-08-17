@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import React, { useLayoutEffect } from "react";
 import "antd/dist/antd.css";
 import "./userLogin.css";
-import * as http from "../../http";
+import * as http from "../../utils/http";
 import { Link, useNavigate } from "react-router-dom";
 
 const UserLoginForm: React.FC = () => {
