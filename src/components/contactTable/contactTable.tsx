@@ -1,60 +1,14 @@
 import { Table } from "antd";
 import { Link } from "react-router-dom";
-import type { ColumnsType } from "antd/lib/table";
 import Contact from "../../domain/contact";
 import * as http from "../../http";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../store/slice/contactSlice";
 import { RootState } from "../../store/store";
 import "./contactTable.css";
 
-const columns: ColumnsType<any> = [
-  {
-    width: 100,
-    dataIndex: "photo",
-    render: (photo) => (
-      <img src={photo} alt={"profile pictre"} className="profile--photo" />
-    ),
-  },
-  {
-    title: "First Name",
-    dataIndex: "first_name",
-    key: "first_name",
-  },
-  {
-    title: "Last Name",
-    dataIndex: "last_name",
-    key: "last_name",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Mobile",
-    dataIndex: "mobile",
-    key: "mobile",
-  },
-  {
-    title: "Company",
-    dataIndex: "company",
-    key: "company",
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record, index) => (
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link to={`/contact/edit/${record.key}`}>Edit</Link>
-        <Link to="#" style={{ color: "red" }}>
-          Delete
-        </Link>
-      </div>
-    ),
-  },
-];
+const { Column } = Table;
 
 const formatedData = (contact: Contact) => {
   const tableRow = {
@@ -72,28 +26,64 @@ const formatedData = (contact: Contact) => {
 
 const ContactTable = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    (async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      const config = {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      };
-      const data = await http.getAllContact(config);
-      dispatch(addContact(data));
-    })();
-  }, [dispatch]);
   const contacts = useSelector((state: RootState) => state.addContact.data);
-  const data = contacts.map(formatedData);
-  console.log(data);
+  let data = contacts.map(formatedData);
+  const [dataDeletion, setDataDeletion] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (dataDeletion) {
+      (async () => {
+        const data = await http.getAllContact();
+        dispatch(addContact(data));
+        setDataDeletion(false);
+      })();
+    }
+  }, [dispatch, dataDeletion]);
+
+  const handleDeleteButton = async (contact_id: string) => {
+    setDataDeletion(true);
+    const res = await http.deleteContact(contact_id);
+    data = data.filter((item) => {
+      return item.key !== +contact_id;
+    });
+    console.log(res);
+  };
+
   return (
     <div>
       <div className="contact--title">Contacts</div>
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={false}
-        style={{ marginTop: "20px" }}
-      ></Table>
+      <Table dataSource={data} pagination={false} style={{ marginTop: "20px" }}>
+        <Column
+          title=""
+          dataIndex="photo"
+          render={(pic) => (
+            <img src={pic} alt="Profile Pic" className="profile--photo" />
+          )}
+        />
+        <Column title="First Name" dataIndex="first_name" key="first_name" />
+        <Column title="Last Name" dataIndex="last_name" key="last_name" />
+        <Column title="Email" dataIndex="email" key="email" />
+        <Column title="Mobile Number" dataIndex="mobile" key="mobile" />
+        <Column title="Company" dataIndex="company" key="company" />
+        <Column
+          title="Action"
+          key="action"
+          dataIndex="key"
+          render={(key) => (
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Link to={`/contact/edit/${key}`}>Edit</Link>
+              <Link
+                to={"/contact"}
+                onClick={() => {
+                  handleDeleteButton(key);
+                }}
+              >
+                Delete
+              </Link>
+            </div>
+          )}
+        />
+      </Table>
     </div>
   );
 };
