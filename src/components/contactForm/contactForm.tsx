@@ -1,6 +1,6 @@
-import { Button, Form, Input, Switch, Upload } from "antd";
+import { Button, Form, Input, Switch, Upload, Spin } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useState } from "react";
 import "./contactForm.css";
 import { useLayoutEffect, useEffect } from "react";
 import * as http from "../../utils/http";
@@ -14,7 +14,8 @@ interface ContactFormInterface {
 const ContactForm = (props: ContactFormInterface) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-
+  const [isLoading, setLoading] = useState<Boolean>(false);
+  console.log(isLoading);
   const navigate = useNavigate();
   useLayoutEffect(() => {
     document.body.style.backgroundColor = "#F2F2EE";
@@ -60,14 +61,15 @@ const ContactForm = (props: ContactFormInterface) => {
 
     try {
       if (!props.update) {
+        setLoading(true);
         const res = await http.addContact(formData);
         openNotification(res.data.message);
       } else {
+        setLoading(true);
         const res = await http.updateContact(formData, id as string);
         openNotification(res.data.message);
         console.log(res);
       }
-
       form.resetFields();
       navigate({ pathname: "/" });
     } catch (err) {
@@ -80,80 +82,88 @@ const ContactForm = (props: ContactFormInterface) => {
   };
 
   return (
-    <div className="contactForm--container">
-      <div className="contactForm--title">
-        {props.update ? "Update Contact" : "Add Contact"}
-      </div>
-      <div className="contactForm--wrapper">
-        <Form
-          form={form}
-          layout="vertical"
-          name="contactForm"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="First Name"
-            name="first_name"
-            rules={[
-              { required: true, message: "Please input your first name!" },
-            ]}
+    <div>
+      <div className="contactForm--container">
+        <div className="contactForm--title">
+          {isLoading ? (
+            <div className="loading--icon">
+              <Spin size="large" />
+              <p>{"Uploading"}</p>
+            </div>
+          ) : null}
+          {props.update ? "Update Contact" : "Add Contact"}
+        </div>
+        <div className="contactForm--wrapper">
+          <Form
+            form={form}
+            layout="vertical"
+            name="contactForm"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
           >
-            <Input placeholder="First Name" />
-          </Form.Item>
+            <Form.Item
+              label="First Name"
+              name="first_name"
+              rules={[
+                { required: true, message: "Please input your first name!" },
+              ]}
+            >
+              <Input placeholder="First Name" />
+            </Form.Item>
 
-          <Form.Item label="Middle Name" name="middle_name">
-            <Input placeholder="Middle Name" />
-          </Form.Item>
+            <Form.Item label="Middle Name" name="middle_name">
+              <Input placeholder="Middle Name" />
+            </Form.Item>
 
-          <Form.Item
-            label="Last Name"
-            name="last_name"
-            rules={[
-              { required: true, message: "Please input your last name!" },
-            ]}
-          >
-            <Input placeholder="Last Name" />
-          </Form.Item>
+            <Form.Item
+              label="Last Name"
+              name="last_name"
+              rules={[
+                { required: true, message: "Please input your last name!" },
+              ]}
+            >
+              <Input placeholder="Last Name" />
+            </Form.Item>
 
-          <Form.Item label="Mobile" name="mobile">
-            <Input placeholder="Mobile Number" />
-          </Form.Item>
+            <Form.Item label="Mobile" name="mobile">
+              <Input placeholder="Mobile Number" />
+            </Form.Item>
 
-          <Form.Item label="Work" name="work">
-            <Input placeholder="Work Number" />
-          </Form.Item>
+            <Form.Item label="Work" name="work">
+              <Input placeholder="Work Number" />
+            </Form.Item>
 
-          <Form.Item label="Home" name="home">
-            <Input placeholder="Home Number" />
-          </Form.Item>
+            <Form.Item label="Home" name="home">
+              <Input placeholder="Home Number" />
+            </Form.Item>
 
-          <Form.Item label="Email" name="email">
-            <Input placeholder="Email" />
-          </Form.Item>
+            <Form.Item label="Email" name="email">
+              <Input placeholder="Email" />
+            </Form.Item>
 
-          <Form.Item label="Company" name="company">
-            <Input placeholder="Company name" />
-          </Form.Item>
-          <Form.Item
-            label="Favourite"
-            name="is_favourite"
-            valuePropName="checked"
-          >
-            <Switch checked={false} />
-          </Form.Item>
-          <Form.Item name="photo" label="Photo">
-            <Upload maxCount={1}>
-              <Button icon={<UploadOutlined />}>Upload Image</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item>
-            <Button className="btn" type="primary" htmlType="submit">
-              {props.update ? "Update Contact" : "Add Contact"}
-            </Button>
-          </Form.Item>
-        </Form>
+            <Form.Item label="Company" name="company">
+              <Input placeholder="Company name" />
+            </Form.Item>
+            <Form.Item
+              label="Favourite"
+              name="is_favourite"
+              valuePropName="checked"
+            >
+              <Switch checked={false} />
+            </Form.Item>
+            <Form.Item name="photo" label="Photo">
+              <Upload maxCount={1}>
+                <Button icon={<UploadOutlined />}>Upload Image</Button>
+              </Upload>
+            </Form.Item>
+            <Form.Item>
+              <Button className="btn" type="primary" htmlType="submit">
+                {props.update ? "Update Contact" : "Add Contact"}
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
     </div>
   );
